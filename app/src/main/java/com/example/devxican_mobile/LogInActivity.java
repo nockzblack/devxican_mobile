@@ -58,7 +58,6 @@ public class LogInActivity extends AppCompatActivity {
 
 
     public void makeSignUp(View v) {
-        //Toast.makeText(this, "BUTTON REGISTRARSE PRESSED", Toast.LENGTH_SHORT).show();
         String email = this.emailInput.getText().toString();
         String password =  this.passwordInput.getText().toString();
 
@@ -70,7 +69,12 @@ public class LogInActivity extends AppCompatActivity {
     }
 
     public void makeLogIn(View v) {
-        Toast.makeText(this, "BUTTON INICIAR SESSION PRESSED", Toast.LENGTH_SHORT).show();
+        String email = this.emailInput.getText().toString();
+        String password =  this.passwordInput.getText().toString();
+
+        if (validateEmailPassword(email,password)) {
+            authServiceLogInEmailPassword(email, password);
+        }
     }
 
     private void authServiceNewUserEmailPassword(final String email, String password) {
@@ -81,8 +85,10 @@ public class LogInActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = mAuth.getCurrentUser();
-                            CharSequence msg = "Usuario con correo: " + user.getEmail() + " creado exitosamente";
+                            String msg = "Usuario con correo: " + user.getEmail() + " creado exitosamente";
                             Toast.makeText(LogInActivity.this, msg, Toast.LENGTH_SHORT).show();
+
+                            // LAUNCH INTENT TO NEXT ACTIVITY
 
                         } else {
                             // If sign in fails, display a message to the user.
@@ -90,6 +96,32 @@ public class LogInActivity extends AppCompatActivity {
                             Toast.makeText(LogInActivity.this, "Error al crear usuario con correo: ." + email,
                                     Toast.LENGTH_SHORT).show();
                         }
+                    }
+                });
+    }
+
+    private void authServiceLogInEmailPassword(String email, String password) {
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            Log.d(TAG, "signInWithEmail:Success");
+                            String msg = "Usuario " + user.getEmail() + " ha iniciado sesion correctamente";
+                            Toast.makeText(LogInActivity.this, msg, Toast.LENGTH_SHORT).show();
+
+
+                            // LAUNCH INTENT TO NEXT ACTIVITY
+
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "signInWithEmail:failure", task.getException());
+                            Toast.makeText(LogInActivity.this, "Error al iniciar sesion.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+
                     }
                 });
     }
