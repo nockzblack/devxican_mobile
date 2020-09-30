@@ -22,6 +22,7 @@ public class LogInActivity extends AppCompatActivity {
     private static  final String LOGIN_FILE = "login_prefences";
     private static final String TAG = "LogInActivity";
     private static final String EMAIL_PREFS = "email";
+    private static final String PASS_PREFS = "password";
 
     private FirebaseAuth mAuth; // firebase object
 
@@ -53,6 +54,7 @@ public class LogInActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         emailInput.setText(readEmail());
+        passwordInput.setText(readPassword());
 
     /*
         // [START create_user_with_email]
@@ -83,7 +85,7 @@ public class LogInActivity extends AppCompatActivity {
         }
     }
 
-    private void authServiceNewUserEmailPassword(final String email, String password) {
+    private void authServiceNewUserEmailPassword(final String email, final String password) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -92,6 +94,7 @@ public class LogInActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = mAuth.getCurrentUser();
                             saveEmail(user.getEmail());
+                            savePassword(password);
 
                             String msg = "Usuario con correo: " + user.getEmail() + " creado exitosamente";
                             Toast.makeText(LogInActivity.this, msg, Toast.LENGTH_SHORT).show();
@@ -111,7 +114,7 @@ public class LogInActivity extends AppCompatActivity {
                 });
     }
 
-    private void authServiceLogInEmailPassword(String email, String password) {
+    private void authServiceLogInEmailPassword(final String email, final String password) {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -120,6 +123,7 @@ public class LogInActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = mAuth.getCurrentUser();
                             saveEmail(user.getEmail());
+                            savePassword(password);
 
                             Log.d(TAG, "signInWithEmail:Success");
                             String msg = "Usuario " + user.getEmail() + " ha iniciado sesion correctamente";
@@ -131,7 +135,7 @@ public class LogInActivity extends AppCompatActivity {
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Toast.makeText(LogInActivity.this, "Error al iniciar sesion.",
+                            Toast.makeText(LogInActivity.this, "Error al iniciar sesión.",
                                     Toast.LENGTH_SHORT).show();
                         }
 
@@ -154,8 +158,18 @@ public class LogInActivity extends AppCompatActivity {
         editor.commit();
     }
 
+    public void savePassword(String password) {
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(PASS_PREFS, password);
+        editor.commit();
+    }
+
     public String readEmail() {
         return prefs.getString(EMAIL_PREFS, "");
+    }
+
+    public String readPassword() {
+        return prefs.getString(PASS_PREFS, "");
     }
 
 
