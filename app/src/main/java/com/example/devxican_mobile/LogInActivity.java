@@ -19,8 +19,9 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class LogInActivity extends AppCompatActivity {
 
-    private static  final String LOGIN_FILE = "login_prefences";
     private static final String TAG = "LogInActivity";
+
+    private static  final String LOGIN_FILE = "login_prefences";
     private static final String EMAIL_PREFS = "email";
     private static final String PASS_PREFS = "password";
 
@@ -56,11 +57,6 @@ public class LogInActivity extends AppCompatActivity {
         emailInput.setText(readEmail());
         passwordInput.setText(readPassword());
 
-    /*
-        // [START create_user_with_email]
-
-        // [END create_user_with_email]
-    */
 
     }
 
@@ -128,7 +124,6 @@ public class LogInActivity extends AppCompatActivity {
                             Log.d(TAG, "signInWithEmail:Success");
                             String msg = "Usuario " + user.getEmail() + " ha iniciado sesion correctamente";
                             Toast.makeText(LogInActivity.this, msg, Toast.LENGTH_SHORT).show();
-
 
                             // TODO: LAUNCH INTENT TO NEXT ACTIVITY WHEN LOG IN
 
