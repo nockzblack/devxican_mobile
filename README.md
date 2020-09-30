@@ -16,7 +16,7 @@ Vista de compartir con navegación
 
 
 Fernando:
-Mecanismo de login con firebase
-Almacenamiento local de credenciales
+Mecanismo de login con firebase [Done]
+Almacenamiento local de credenciales [Done]
 Desplegar el nombre del usuario obtenido por firebase
 Recyclerview para los posts con info obtenida dinámicamente
