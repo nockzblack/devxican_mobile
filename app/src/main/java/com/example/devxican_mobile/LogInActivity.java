@@ -3,6 +3,7 @@ package com.example.devxican_mobile;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,9 +19,9 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class LogInActivity extends AppCompatActivity {
 
-
-
+    private static  final String LOGIN_FILE = "login_prefences";
     private static final String TAG = "LogInActivity";
+    private static final String EMAIL_PREFS = "email";
 
     private FirebaseAuth mAuth; // firebase object
 
@@ -31,13 +32,16 @@ public class LogInActivity extends AppCompatActivity {
     private EditText passwordInput;
 
 
+    private SharedPreferences prefs;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
+
+        chargePrefs();
 
         emailInput = findViewById(R.id.editTextEmail);
         passwordInput = findViewById(R.id.editTextPassword);
@@ -47,6 +51,8 @@ public class LogInActivity extends AppCompatActivity {
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
+
+        emailInput.setText(readEmail());
 
     /*
         // [START create_user_with_email]
@@ -85,10 +91,15 @@ public class LogInActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = mAuth.getCurrentUser();
+                            saveEmail(user.getEmail());
+
                             String msg = "Usuario con correo: " + user.getEmail() + " creado exitosamente";
                             Toast.makeText(LogInActivity.this, msg, Toast.LENGTH_SHORT).show();
 
-                            // LAUNCH INTENT TO NEXT ACTIVITY
+
+                            // TODO: LAUNCH INTENT TO NEXT ACTIVITY WHEN NEW USER LOG IN
+
+
 
                         } else {
                             // If sign in fails, display a message to the user.
@@ -108,12 +119,14 @@ public class LogInActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = mAuth.getCurrentUser();
+                            saveEmail(user.getEmail());
+
                             Log.d(TAG, "signInWithEmail:Success");
                             String msg = "Usuario " + user.getEmail() + " ha iniciado sesion correctamente";
                             Toast.makeText(LogInActivity.this, msg, Toast.LENGTH_SHORT).show();
 
 
-                            // LAUNCH INTENT TO NEXT ACTIVITY
+                            // TODO: LAUNCH INTENT TO NEXT ACTIVITY WHEN LOG IN
 
                         } else {
                             // If sign in fails, display a message to the user.
@@ -130,6 +143,22 @@ public class LogInActivity extends AppCompatActivity {
     private boolean validateEmailPassword(String mail, String password) {
         return true;
     }
+
+    private void chargePrefs() {
+         prefs = getSharedPreferences(LOGIN_FILE, MODE_PRIVATE);
+    }
+
+    public void saveEmail(String email) {
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(EMAIL_PREFS, email);
+        editor.commit();
+    }
+
+    public String readEmail() {
+        return prefs.getString(EMAIL_PREFS, "");
+    }
+
+
 
 
 }
