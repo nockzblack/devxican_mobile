@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="red_primary">#F21B42</color>
-    <color name="purple_200">#F21D1D</color>
-    <color name="purple_700">#0C3558</color>
-    <color name="teal_200">#0C3559</color>
-    <color name="teal_700">#0C3559</color>
+    <color name="red_alt">#F21D1D</color>
+    <color name="blue">#0C3558</color>
+    <color name="blue_alt_primary">#0C4459</color>
+    <color name="blue_alt_secundary">#148BA6</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 </resources>
