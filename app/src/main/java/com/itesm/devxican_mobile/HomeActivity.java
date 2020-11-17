@@ -1,12 +1,17 @@
 package com.itesm.devxican_mobile;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Menu;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.itesm.devxican_mobile.data.model.LoggedInUser;
 
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -18,12 +23,25 @@ import androidx.appcompat.widget.Toolbar;
 
 public class HomeActivity extends AppCompatActivity {
 
+    public static final String USER_TAG = "LoggedInUser";
+
     private AppBarConfiguration mAppBarConfiguration;
+    LoggedInUser user;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        Intent auxIntent = getIntent();
+        user = (LoggedInUser) auxIntent.getSerializableExtra(USER_TAG);
+
+        Toast.makeText(this, user.getDisplayName(), Toast.LENGTH_LONG).show();
+
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         FloatingActionButton fab = findViewById(R.id.fab);

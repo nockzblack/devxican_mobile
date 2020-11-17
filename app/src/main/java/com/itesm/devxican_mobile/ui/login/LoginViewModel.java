@@ -21,14 +21,13 @@ import java.util.concurrent.Executor;
 
 public class LoginViewModel extends ViewModel {
 
+    private static final String TAG = "LoginViewModel";
+
     private MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
     private MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();
 
-
-    private static final String TAG = "LoginViewModel";
-
     private FirebaseAuth mAuth;
-    private FirebaseUser user;
+    private LoggedInUser user;
     private LoginActivity activity;
 
 
@@ -54,7 +53,7 @@ public class LoginViewModel extends ViewModel {
                         if (task.isSuccessful()) {
                             Log.wtf(TAG, "createUserWithEmail:success");
 
-                            LoggedInUser user =  new LoggedInUser(mAuth.getCurrentUser());
+                            user =  new LoggedInUser(mAuth.getCurrentUser());
 
                             Result<LoggedInUser> result = new Result.Success<>(user);
 
@@ -92,6 +91,10 @@ public class LoginViewModel extends ViewModel {
     // A placeholder password validation check
     private boolean isPasswordValid(String password) {
         return password != null && password.trim().length() > 5;
+    }
+
+    public LoggedInUser getUser() {
+        return user;
     }
 }
 
