@@ -32,8 +32,11 @@ import com.itesm.devxican_mobile.ui.login.LoginViewModelFactory;
 public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "LoginActivity";
+    public static final String USER_TAG = "LoggedInUser";
 
     private LoginViewModel loginViewModel;
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -151,9 +154,11 @@ public class LoginActivity extends AppCompatActivity {
         //EditText editText = (EditText) findViewById(R.id.editText);
         //String message = editText.getText().toString();
         //intent.putExtra(EXTRA_MESSAGE, message);
+        auxIntent.putExtra(USER_TAG, this.loginViewModel.getUser());
         startActivity(auxIntent);
 
-        Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
+
+        //Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
     }
 
     private void showLoginFailed(@StringRes Integer errorString) {
