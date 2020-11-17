@@ -5,6 +5,7 @@ import android.app.Activity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -13,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -22,11 +24,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.itesm.devxican_mobile.HomeActivity;
 import com.itesm.devxican_mobile.R;
 import com.itesm.devxican_mobile.ui.login.LoginViewModel;
 import com.itesm.devxican_mobile.ui.login.LoginViewModelFactory;
 
 public class LoginActivity extends AppCompatActivity {
+
+    private static final String TAG = "LoginActivity";
 
     private LoginViewModel loginViewModel;
 
@@ -38,7 +43,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
 
-        loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
+        loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory(this))
                 .get(LoginViewModel.class);
 
         // Fields
@@ -84,11 +89,13 @@ public class LoginActivity extends AppCompatActivity {
                 return false;
             }
         });
+
         // listens the button
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 loadingProgressBar.setVisibility(View.VISIBLE);
+                Log.wtf(TAG, "before call medthod login from view model");
                 loginViewModel.login(usernameEditText.getText().toString(),
                         passwordEditText.getText().toString());
             }
@@ -120,6 +127,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (loginResult == null) {
                     return;
                 }
+
                 loadingProgressBar.setVisibility(View.GONE);
                 if (loginResult.getError() != null) {
                     showLoginFailed(loginResult.getError());
@@ -127,10 +135,10 @@ public class LoginActivity extends AppCompatActivity {
                 if (loginResult.getSuccess() != null) {
                     updateUiWithUser(loginResult.getSuccess());
                 }
-                setResult(Activity.RESULT_OK);
+                setResult(Activity.RESULT_OK); // activity life cycle method
 
                 //Complete and destroy login activity once successful
-                finish();
+                finish(); // activity life cycle method
             }
         });
 
@@ -138,7 +146,13 @@ public class LoginActivity extends AppCompatActivity {
 
     private void updateUiWithUser(LoggedInUserView model) {
         String welcome = getString(R.string.welcome) + model.getDisplayName();
-        // TODO : initiate successful logged in experience
+
+        Intent auxIntent = new Intent(this, HomeActivity.class);
+        //EditText editText = (EditText) findViewById(R.id.editText);
+        //String message = editText.getText().toString();
+        //intent.putExtra(EXTRA_MESSAGE, message);
+        startActivity(auxIntent);
+
         Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
     }
 
