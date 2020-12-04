@@ -50,8 +50,7 @@ public class HomeActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DataGenerator dg = new DataGenerator();
-                dg.generatePosts(3, 3, true);
+
             }
         });
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
