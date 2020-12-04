@@ -1,4 +1,4 @@
-package com.itesm.devxican_mobile.data;
+package com.itesm.devxican_mobile.data.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.util.Patterns;
 
@@ -13,11 +14,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.itesm.devxican_mobile.data.Result;
+import com.itesm.devxican_mobile.data.model.Result;
 import com.itesm.devxican_mobile.data.model.LoggedInUser;
 import com.itesm.devxican_mobile.R;
 
-import java.util.concurrent.Executor;
+import static android.content.Context.MODE_PRIVATE;
 
 public class LoginViewModel extends ViewModel {
 
@@ -27,8 +28,15 @@ public class LoginViewModel extends ViewModel {
     private MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();
 
     private FirebaseAuth mAuth;
-    private LoggedInUser user;
+    private FirebaseUser user;
     private LoginActivity activity;
+
+
+    private static final String LOGIN_FILE = "login_prefences";
+    private static final String EMAIL_PREFS = "email";
+    private static final String PASS_PREFS = "password";
+    private SharedPreferences prefs;
+
 
 
     LoginViewModel(FirebaseAuth mAuth, LoginActivity activity) {
@@ -46,6 +54,15 @@ public class LoginViewModel extends ViewModel {
 
     public void login(String email, String password) {
 
+        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    user = task.getResult().getUser();
+                }
+            }
+        });
+
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -53,7 +70,8 @@ public class LoginViewModel extends ViewModel {
                         if (task.isSuccessful()) {
                             Log.wtf(TAG, "createUserWithEmail:success");
 
-                            user =  new LoggedInUser(mAuth.getCurrentUser());
+
+                            user =  mAuth.getCurrentUser();
 
                             Result<LoggedInUser> result = new Result.Success<>(user);
 
@@ -93,7 +111,7 @@ public class LoginViewModel extends ViewModel {
         return password != null && password.trim().length() > 5;
     }
 
-    public LoggedInUser getUser() {
+    public FirebaseUser getUser() {
         return user;
     }
 }

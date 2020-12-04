@@ -2,10 +2,12 @@ package com.itesm.devxican_mobile.ui.login;
 
 import android.app.Activity;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -24,18 +26,36 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.itesm.devxican_mobile.HomeActivity;
 import com.itesm.devxican_mobile.R;
+import com.itesm.devxican_mobile.data.model.User;
 import com.itesm.devxican_mobile.ui.login.LoginViewModel;
 import com.itesm.devxican_mobile.ui.login.LoginViewModelFactory;
 
 public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "LoginActivity";
-    public static final String USER_TAG = "LoggedInUser";
+    public static final String USER_TAG = "user";
 
-    private LoginViewModel loginViewModel;
+    private static final String LOGIN_FILE = "login_prefences";
+    private static final String EMAIL_PREFS = "email";
+    private static final String PASS_PREFS = "password";
 
+    private SharedPreferences prefs;
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
+    private CollectionReference users_ref;
+
+    public EditText et_email, et_password;
+    public Button loginButton, signinButton;
+    public ProgressBar loadingProgressBar;
 
 
     @Override
@@ -45,18 +65,28 @@ public class LoginActivity extends AppCompatActivity {
         // Set layout
         setContentView(R.layout.activity_login);
 
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+        users_ref = db.collection("users");
 
-        loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory(this))
-                .get(LoginViewModel.class);
 
         // Fields
-        final EditText usernameEditText = findViewById(R.id.username);
-        final EditText passwordEditText = findViewById(R.id.password);
-
+        et_email = findViewById(R.id.username);
+        et_password = findViewById(R.id.password);
         // Buttons
-        final Button loginButton = findViewById(R.id.login);
+        loginButton = findViewById(R.id.login);
+        signinButton = findViewById(R.id.signin);
+
         // Widget
-        final ProgressBar loadingProgressBar = findViewById(R.id.loading);
+        loadingProgressBar = findViewById(R.id.loading);
+
+        prefs = getSharedPreferences(LOGIN_FILE, MODE_PRIVATE);
+        et_email.setText(readEmail());
+        et_password.setText(readPassword());
+        loginButton.setEnabled(et_password.getText().toString().length() >= 6 && !et_email.getText().toString().trim().equals(""));
+
+
+
 
         // TextWatcher do changes when is called
         TextWatcher afterTextChangedListener = new TextWatcher() {
@@ -67,27 +97,27 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // ignore
+
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                loginViewModel.loginDataChanged(usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString());
+                loginButton.setEnabled(et_password.getText().toString().length() >= 6 && !et_email.getText().toString().trim().equals(""));
             }
         };
-        // Add TextWatcher as listener
-        usernameEditText.addTextChangedListener(afterTextChangedListener);
-        // Add TextWatcher as listener
-        passwordEditText.addTextChangedListener(afterTextChangedListener);
+
+        et_password.addTextChangedListener(afterTextChangedListener);
+        et_email.addTextChangedListener(afterTextChangedListener);
+
         // listens the enter on keyboard
-        passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        et_password.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    loginViewModel.login(usernameEditText.getText().toString(),
-                            passwordEditText.getText().toString());
+                if (actionId == EditorInfo.IME_ACTION_NEXT) {
+
+                    login(et_email.getText().toString(),
+                            et_password.getText().toString());
                 }
                 return false;
             }
@@ -97,51 +127,54 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadingProgressBar.setVisibility(View.VISIBLE);
-                //Log.wtf(TAG, "before call medthod login from view model");
-                loginViewModel.login(usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString());
+                login(et_email.getText().toString(),
+                        et_password.getText().toString());
             }
         });
 
-        // listens the form and updates it
-        loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
+        signinButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onChanged(@Nullable LoginFormState loginFormState) {
-                if (loginFormState == null) {
-                    return;
-                }
-                loginButton.setEnabled(loginFormState.isDataValid());
-
-                if (loginFormState.getUsernameError() != null) {
-                    String strError = getString(loginFormState.getUsernameError());
-                    usernameEditText.setError(strError);
-                }
-                if (loginFormState.getPasswordError() != null) {
-                    passwordEditText.setError(getString(loginFormState.getPasswordError()));
-                }
+            public void onClick(View view) {
+                createNewUser(et_email.getText().toString(), et_password.getText().toString());
             }
         });
+    }
 
+    private void login(String email, String password) {
 
-        loginViewModel.getLoginResult().observe(this, new Observer<LoginResult>() {
+        loadingProgressBar.setVisibility(View.VISIBLE);
+
+        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
-            public void onChanged(@Nullable LoginResult loginResult) {
-                if (loginResult == null) {
-                    return;
-                }
-
-                loadingProgressBar.setVisibility(View.GONE);
-                if (loginResult.getError() != null) {
-                    showLoginFailed(loginResult.getError());
-                }
-                if (loginResult.getSuccess() != null) {
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) { // Logged in
+                    loadingProgressBar.setVisibility(View.GONE);
+                    Toast.makeText(LoginActivity.this, "Successfully logged in as: ".concat(email), Toast.LENGTH_LONG).show();
                     updateUiWithUser();
                 }
-                setResult(Activity.RESULT_OK); // activity life cycle method
+            }
+        });
+    }
 
-                //Complete and destroy login activity once successful
-                finish(); // activity life cycle method
+    private void createNewUser(String email, String password) {
+
+        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    User user = new User(email, "Anonymous", "n/a", "https://firebasestorage.googleapis.com/v0/b/devxicanmobile.appspot.com/o/users%2Fdeveloper.png?alt=media&token=363ffb24-d105-46e3-b2a9-481666fba6a8");
+                    users_ref.document().set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            loadingProgressBar.setVisibility(View.GONE);
+                            Log.d(TAG, "User created: ".concat(email));
+                            Toast.makeText(LoginActivity.this, "Successfully created new user: ".concat(email), Toast.LENGTH_LONG).show();
+                            updateUiWithUser();
+                        }
+                    });
+                } else {
+                    Log.wtf(TAG, "Couldn't create a new user: ", task.getException());
+                }
             }
         });
 
@@ -149,11 +182,30 @@ public class LoginActivity extends AppCompatActivity {
 
     private void updateUiWithUser() {
         Intent auxIntent = new Intent(this, HomeActivity.class);
-        auxIntent.putExtra(USER_TAG, this.loginViewModel.getUser());
+        saveEmail(et_email.getText().toString());
+        savePassword(et_password.getText().toString());
+        auxIntent.putExtra(USER_TAG, this.mAuth.getCurrentUser());
         startActivity(auxIntent);
     }
 
-    private void showLoginFailed(@StringRes Integer errorString) {
-        Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
+    public void saveEmail(String email) {
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(EMAIL_PREFS, email);
+        editor.apply();
     }
+
+    public void savePassword(String password) {
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(PASS_PREFS, password);
+        editor.apply();
+    }
+
+    public String readEmail() {
+        return prefs.getString(EMAIL_PREFS, "");
+    }
+
+    public String readPassword() {
+        return prefs.getString(PASS_PREFS, "");
+    }
+
 }

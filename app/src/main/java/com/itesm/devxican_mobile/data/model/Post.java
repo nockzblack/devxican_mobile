@@ -1,4 +1,4 @@
-package com.itesm.devxican_mobile.data;
+package com.itesm.devxican_mobile.data.model;
 
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
