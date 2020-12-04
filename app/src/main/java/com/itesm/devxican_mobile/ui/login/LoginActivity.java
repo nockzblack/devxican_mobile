@@ -36,6 +36,14 @@ public class LoginActivity extends AppCompatActivity {
 
     private LoginViewModel loginViewModel;
 
+    private EditText usernameEditText;
+    private EditText passwordEditText;
+
+    private Button loginButton;
+    private Button registerButton;
+
+    private ProgressBar loadingProgressBar;
+
 
 
     @Override
@@ -50,13 +58,15 @@ public class LoginActivity extends AppCompatActivity {
                 .get(LoginViewModel.class);
 
         // Fields
-        final EditText usernameEditText = findViewById(R.id.username);
-        final EditText passwordEditText = findViewById(R.id.password);
+        usernameEditText = findViewById(R.id.username);
+        passwordEditText = findViewById(R.id.password);
 
         // Buttons
-        final Button loginButton = findViewById(R.id.login);
+        loginButton = findViewById(R.id.login);
+        registerButton = findViewById(R.id.register);
+
         // Widget
-        final ProgressBar loadingProgressBar = findViewById(R.id.loading);
+        ProgressBar loadingProgressBar = findViewById(R.id.loading);
 
         // TextWatcher do changes when is called
         TextWatcher afterTextChangedListener = new TextWatcher() {
@@ -86,23 +96,36 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    loginViewModel.login(usernameEditText.getText().toString(),
+                    loginViewModel.registerAndLogin(usernameEditText.getText().toString(),
                             passwordEditText.getText().toString());
                 }
                 return false;
             }
         });
 
-        // listens the button
+        // listens the sign In button
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 loadingProgressBar.setVisibility(View.VISIBLE);
                 //Log.wtf(TAG, "before call medthod login from view model");
-                loginViewModel.login(usernameEditText.getText().toString(),
+                loginViewModel.signIn(usernameEditText.getText().toString(),
                         passwordEditText.getText().toString());
             }
         });
+
+        // listens the register button
+
+        registerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadingProgressBar.setVisibility(View.VISIBLE);
+                loginViewModel.registerAndLogin(usernameEditText.getText().toString(),
+                        passwordEditText.getText().toString());
+            }
+        });
+
+
 
         // listens the form and updates it
         loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
@@ -112,6 +135,7 @@ public class LoginActivity extends AppCompatActivity {
                     return;
                 }
                 loginButton.setEnabled(loginFormState.isDataValid());
+                registerButton.setEnabled(loginFormState.isDataValid());
 
                 if (loginFormState.getUsernameError() != null) {
                     String strError = getString(loginFormState.getUsernameError());
@@ -131,17 +155,23 @@ public class LoginActivity extends AppCompatActivity {
                     return;
                 }
 
+                // Hide loading Bar
                 loadingProgressBar.setVisibility(View.GONE);
+
+
                 if (loginResult.getError() != null) {
                     showLoginFailed(loginResult.getError());
+                    return;
                 }
                 if (loginResult.getSuccess() != null) {
                     updateUiWithUser();
-                }
-                setResult(Activity.RESULT_OK); // activity life cycle method
 
-                //Complete and destroy login activity once successful
-                finish(); // activity life cycle method
+                    setResult(Activity.RESULT_OK); // activity life cycle method
+
+                    //Complete and destroy login activity once successful
+                    finish(); // activity life cycle method
+                }
+
             }
         });
 
@@ -155,5 +185,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private void showLoginFailed(@StringRes Integer errorString) {
         Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
+        this.passwordEditText.getText().clear();
     }
 }
