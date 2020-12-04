@@ -6,6 +6,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -14,7 +15,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -26,17 +26,18 @@ import android.widget.Toast;
 
 import com.itesm.devxican_mobile.HomeActivity;
 import com.itesm.devxican_mobile.R;
-import com.itesm.devxican_mobile.ui.login.LoginViewModel;
-import com.itesm.devxican_mobile.ui.login.LoginViewModelFactory;
 
 public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "LoginActivity";
     public static final String USER_TAG = "LoggedInUser";
+    private static final String LOGIN_FILE = "login_prefences";
+    private static final String EMAIL_PREFS = "email";
+    private static final String PASS_PREFS = "password";
 
     private LoginViewModel loginViewModel;
 
-    private EditText usernameEditText;
+    private EditText emailEditText;
     private EditText passwordEditText;
 
     private Button loginButton;
@@ -44,6 +45,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private ProgressBar loadingProgressBar;
 
+    private SharedPreferences prefs;
 
 
     @Override
@@ -53,12 +55,13 @@ public class LoginActivity extends AppCompatActivity {
         // Set layout
         setContentView(R.layout.activity_login);
 
-
         loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory(this))
                 .get(LoginViewModel.class);
 
+        chargePrefs();
+
         // Fields
-        usernameEditText = findViewById(R.id.username);
+        emailEditText = findViewById(R.id.username);
         passwordEditText = findViewById(R.id.password);
 
         // Buttons
@@ -66,7 +69,7 @@ public class LoginActivity extends AppCompatActivity {
         registerButton = findViewById(R.id.register);
 
         // Widget
-        ProgressBar loadingProgressBar = findViewById(R.id.loading);
+        loadingProgressBar = findViewById(R.id.loading);
 
         // TextWatcher do changes when is called
         TextWatcher afterTextChangedListener = new TextWatcher() {
@@ -82,12 +85,12 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                loginViewModel.loginDataChanged(usernameEditText.getText().toString(),
+                loginViewModel.loginDataChanged(emailEditText.getText().toString(),
                         passwordEditText.getText().toString());
             }
         };
         // Add TextWatcher as listener
-        usernameEditText.addTextChangedListener(afterTextChangedListener);
+        emailEditText.addTextChangedListener(afterTextChangedListener);
         // Add TextWatcher as listener
         passwordEditText.addTextChangedListener(afterTextChangedListener);
         // listens the enter on keyboard
@@ -96,7 +99,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    loginViewModel.registerAndLogin(usernameEditText.getText().toString(),
+                    loginViewModel.registerAndLogin(emailEditText.getText().toString(),
                             passwordEditText.getText().toString());
                 }
                 return false;
@@ -109,7 +112,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 loadingProgressBar.setVisibility(View.VISIBLE);
                 //Log.wtf(TAG, "before call medthod login from view model");
-                loginViewModel.signIn(usernameEditText.getText().toString(),
+                loginViewModel.signIn(emailEditText.getText().toString(),
                         passwordEditText.getText().toString());
             }
         });
@@ -120,7 +123,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 loadingProgressBar.setVisibility(View.VISIBLE);
-                loginViewModel.registerAndLogin(usernameEditText.getText().toString(),
+                loginViewModel.registerAndLogin(emailEditText.getText().toString(),
                         passwordEditText.getText().toString());
             }
         });
@@ -139,7 +142,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (loginFormState.getUsernameError() != null) {
                     String strError = getString(loginFormState.getUsernameError());
-                    usernameEditText.setError(strError);
+                    emailEditText.setError(strError);
                 }
                 if (loginFormState.getPasswordError() != null) {
                     passwordEditText.setError(getString(loginFormState.getPasswordError()));
@@ -166,7 +169,11 @@ public class LoginActivity extends AppCompatActivity {
                 if (loginResult.getSuccess() != null) {
                     updateUiWithUser();
 
-                    setResult(Activity.RESULT_OK); // activity life cycle method
+                    saveEmail(emailEditText.getText().toString());
+                    savePassword(passwordEditText.getText().toString());
+
+                    // activity life cycle method
+                    setResult(Activity.RESULT_OK);
 
                     //Complete and destroy login activity once successful
                     finish(); // activity life cycle method
@@ -175,7 +182,13 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+
+        emailEditText.setText(readEmail());
+        passwordEditText.setText(readPassword());
+
     }
+
+
 
     private void updateUiWithUser() {
         Intent auxIntent = new Intent(this, HomeActivity.class);
@@ -185,6 +198,31 @@ public class LoginActivity extends AppCompatActivity {
 
     private void showLoginFailed(@StringRes Integer errorString) {
         Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
-        this.passwordEditText.getText().clear();
+        passwordEditText.getText().clear();
+    }
+
+    private void chargePrefs() {
+        prefs = getSharedPreferences(LOGIN_FILE, MODE_PRIVATE);
+    }
+
+
+    public void saveEmail(String email) {
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(EMAIL_PREFS, email);
+        editor.commit();
+    }
+
+    public void savePassword(String password) {
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(PASS_PREFS, password);
+        editor.commit();
+    }
+
+    public String readEmail() {
+        return prefs.getString(EMAIL_PREFS, "");
+    }
+
+    public String readPassword() {
+        return prefs.getString(PASS_PREFS, "");
     }
 }
