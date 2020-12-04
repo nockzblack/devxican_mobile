@@ -1,9 +1,14 @@
 package com.itesm.devxican_mobile;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.AttributeSet;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -12,7 +17,10 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.itesm.devxican_mobile.data.model.LoggedInUser;
+import com.itesm.devxican_mobile.ui.login.LoginActivity;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -30,7 +38,6 @@ public class HomeActivity extends AppCompatActivity {
 
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +46,7 @@ public class HomeActivity extends AppCompatActivity {
         Intent auxIntent = getIntent();
         user = (LoggedInUser) auxIntent.getSerializableExtra(USER_TAG);
 
-        Toast.makeText(this, user.getDisplayName(), Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, user.getDisplayName(), Toast.LENGTH_LONG).show();
 
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -63,7 +70,39 @@ public class HomeActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        MenuItem logOutButton = findViewById(R.id.log_out);
+
     }
+
+    /*
+    @Nullable
+    @Override
+    public View onCreateView(@Nullable View parent, @NonNull String name, @NonNull Context context, @NonNull AttributeSet attrs) {
+
+        MenuItem logOutButton = findViewById(R.id.log_out);
+
+        logOutButton.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+
+                updateUI();
+
+                // activity life cycle method
+                setResult(Activity.RESULT_OK);
+
+                //Complete and destroy login activity once successful
+                finish(); // activity life cycle method
+
+                return false;
+            }
+        });
+
+        return super.onCreateView(parent, name, context, attrs);
+    }
+
+     */
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -73,9 +112,36 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()) {
+            //Log Out button
+            case R.id.log_out:
+                updateUI();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+
+    }
+
+    @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
+
+
+    private void updateUI() {
+        Intent auxIntent = new Intent(this, LoginActivity.class);
+        startActivity(auxIntent);
+        setResult(Activity.RESULT_OK);
+        finish();
+    }
+
+
+
 }
