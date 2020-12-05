@@ -119,7 +119,8 @@ public class BranchActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intPost = new Intent(getApplicationContext(), PostActivity.class);
-                intPost.putExtra("post_id", posts.get(rv_posts.getChildAdapterPosition(view)).getId());;
+                intPost.putExtra("post_id", posts.get(rv_posts.getChildAdapterPosition(view)).getId());
+                intPost.putExtra("branch_name", branch.name);
                 startActivity(intPost);
             }
         });

@@ -127,7 +127,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                             }
                         });
                         holder.user_name_rv.setText(curr_user.getEmail());
-                        holder.post_body_rv.setText(post.body);
+                        holder.post_body_rv.setText(post.body.substring(0,post.body.length() < 140 ? post.body.length() : 140).concat(" [...]"));
                         holder.likes_rv.setText(String.valueOf(post.likes.size()));
                         holder.com_num_rv.setText(String.valueOf(post.comments.size()));
 
@@ -137,11 +137,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                                 .load(user.photoURL)
                                 .into(holder.author_img_rv);
 
-                        if (post.likes.contains(posts.get(position))) { // has like on post
+                        if (post.likes.contains(posts.get(position))) { // has like on post;
+                            holder.bt_like_rv.setColorFilter(Color.RED);
                             holder.bt_like_rv.setEnabled(false);
                             holder.bt_dislike_rv.setEnabled(true);
                             haslike = true;
                         } else if (post.dislikes.contains(posts.get(position))) { // has dislike
+                            holder.bt_like_rv.setColorFilter(Color.RED);
                             holder.bt_like_rv.setEnabled(true);
                             holder.bt_dislike_rv.setEnabled(false);
                             hasdislike = true;
@@ -158,6 +160,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (task.isSuccessful()) {
                                                     hasdislike = false;
+                                                    holder.bt_dislike_rv.setColorFilter(Color.WHITE);
                                                     Log.i("INFO", "Successfully removed the dislike at the post");
                                                 } else {
                                                     Log.wtf("ERROR", "Error updating post.", task.getException());
@@ -171,6 +174,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
                                                 haslike = true;
+                                                holder.bt_like_rv.setColorFilter(Color.RED);
                                                 Log.i("INFO", "Successfully liked the post");
                                             } else {
                                                 Log.wtf("ERROR", "Error updating post.", task.getException());
@@ -208,7 +212,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
                                                 hasdislike = true;
-                                                Log.i("INFO", "Successfully liked the post");
+                                                holder.bt_dislike_rv.setColorFilter(Color.WHITE);
+                                                Log.i("INFO", "Successfully disliked the post");
                                             } else {
                                                 Log.wtf("ERROR", "Error updating post.", task.getException());
                                             }
