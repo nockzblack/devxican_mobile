@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -25,9 +26,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.itesm.devxican_mobile.ui.post.CreatePostActivity;
 import com.itesm.devxican_mobile.ui.post.PostActivity;
 import com.itesm.devxican_mobile.ui.post.PostAdapter;
 import com.squareup.picasso.Picasso;
@@ -47,6 +50,17 @@ public class BranchActivity extends AppCompatActivity {
     ArrayList<DocumentReference> posts;
     Branch branch;
     User user;
+    Button bt_new_post;
+
+    public void createPost() {
+        Toast.makeText(getApplicationContext(), "CREANDO NUEVO POST", Toast.LENGTH_LONG).show();
+        Intent intNew = new Intent(BranchActivity.this, CreatePostActivity.class);
+        intNew.putExtra("branch_id", branch_ref.getId());
+        //intNew.putExtra("branch_id", "oidnfsandfWEFEW123");
+
+        //finish();
+        BranchActivity.this.startActivity(intNew);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +81,15 @@ public class BranchActivity extends AppCompatActivity {
         curr_user = mAuth.getCurrentUser();
         // Access a Cloud Firestore instance from your Activity
         db = FirebaseFirestore.getInstance();
+
+        bt_new_post = findViewById(R.id.new_post);
+
+        bt_new_post.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                createPost();
+            }
+        });
 
         users_ref = db.collection("users");
         user_ref = users_ref.document(curr_user.getUid());

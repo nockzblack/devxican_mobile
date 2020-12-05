@@ -77,7 +77,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#DD1D1D"
+            android:background="#E85959"
             android:orientation="horizontal">
 
             <ImageView
@@ -140,6 +140,12 @@
                 android:textSize="24sp" />
 
         </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_comments"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp" />
 
 
     </LinearLayout>
