@@ -86,6 +86,72 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     Comment com = task.getResult().toObject(Comment.class);
+                    com.post.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentReference branch_ref = task.getResult().toObject(Post.class).branch;
+                                branch_ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            Branch branch = task.getResult().toObject(Branch.class);
+                                            if (branch.admins.contains(user_ref)) {
+                                                Log.d("INFO", "ERES ADMIN");
+                                                isAdmin = true;
+                                                if (isAdmin) {
+                                                    holder.hide.setVisibility(View.VISIBLE);
+                                                    holder.hide.setOnClickListener(new View.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(View view) {
+                                                            com_ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                                @Override
+                                                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                                    if (task.isSuccessful()) {
+                                                                        Comment com = task.getResult().toObject(Comment.class);
+                                                                        com.show = !com.show;
+                                                                        com_ref.update("show", com.show).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                            @Override
+                                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                                if (task.isSuccessful()) {
+                                                                                    if (!com.show) {
+                                                                                        holder.itemView.setBackgroundColor(Color.LTGRAY);
+                                                                                    } else {
+                                                                                        //#EABFBF
+                                                                                        holder.itemView.setBackgroundColor(Color.argb(255,(14*16)+10,(11*16)+15, (11*16)+15));
+                                                                                    }
+                                                                                    Log.d("UPDATE", !com.show ? "Comment hidden successfully." : "Comment shown successfully.");
+                                                                                } else {
+                                                                                    Log.wtf("ERROR", "Error updating post document.", task.getException());
+                                                                                }
+                                                                            }
+                                                                        });
+                                                                    } else {
+                                                                        Log.wtf("ERROR", "Error reading post document.", task.getException());
+                                                                    }
+                                                                }
+                                                            });
+                                                        }
+                                                    });
+                                                }
+                                            } else {
+                                                com_ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                        holder.itemView.setVisibility(task.getResult().toObject(Comment.class).show ? View.VISIBLE : View.INVISIBLE);
+                                                    }
+                                                });
+                                            }
+                                        } else {
+                                            Log.wtf("ERROR", "Error reading branch document.", task.getException());
+                                        }
+                                    }
+                                });
+                            } else {
+                                Log.wtf("ERROR", "Error reading post document.", task.getException());
+                            }
+                        }
+                    });
 
 
                     if (com.likes.contains(user_ref)) { // has like on post;

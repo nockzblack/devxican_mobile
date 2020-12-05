@@ -37,8 +37,8 @@ public class BranchAdapter extends RecyclerView.Adapter<com.itesm.devxican_mobil
     public FirebaseAuth mAuth;
     public CollectionReference branches_ref, users_ref;
     public FirebaseUser curr_user;
-    public DocumentReference user;
-    public User userdata;
+    public DocumentReference user_ref;
+    public User user;
 
     public static final String ERROR = "ERROR";
     public static final String INFO = "INFO";
@@ -48,9 +48,9 @@ public class BranchAdapter extends RecyclerView.Adapter<com.itesm.devxican_mobil
 
     public View.OnClickListener listener;
     public Context context;
-    public ArrayList<Branch> branches;
+    public ArrayList<DocumentReference> branches;
 
-    public BranchAdapter(Context context, ArrayList<Branch> branches) {
+    public BranchAdapter(Context context, ArrayList<DocumentReference> branches) {
 
         this.context = context;
         this.branches = branches;
@@ -62,12 +62,12 @@ public class BranchAdapter extends RecyclerView.Adapter<com.itesm.devxican_mobil
         users_ref = db.collection("users");
         mStorageRef = FirebaseStorage.getInstance().getReference("branches");
 
-        user = users_ref.document(curr_user.getUid());
-        user.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        user_ref = users_ref.document(curr_user.getUid());
+        user_ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
-                    userdata = task.getResult().toObject(User.class);
+                    user = task.getResult().toObject(User.class);
                     //Log.i(INFO, );
                 } else {
                     Log.w(ERROR, "Error getting user document.", task.getException());
@@ -90,31 +90,98 @@ public class BranchAdapter extends RecyclerView.Adapter<com.itesm.devxican_mobil
     @Override
     public void onBindViewHolder(@NonNull BranchViewHolder holder, int position) {
 
-        // downloading image from firebase storage
-        String url = branches.get(position).backURL;
 
-        Picasso.get()
-                .load(url)
-                .fit()
-                .centerInside()
-                .into(holder.branch_img);
+        branch_ref = branches_ref.document(branches.get(position).getId());
 
-        branches_ref.whereEqualTo("name", branches.get(position).name) // obtaining current branch_ref
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        branch_ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    Branch branch = task.getResult().toObject(Branch.class);
+
+                    if (branch.followers.contains(user_ref)) {
+                        holder.bt_follow.setText("unfollow");
+                    }
+
+                    // downloading image from firebase storage
+                    Picasso.get()
+                            .load(branch.backURL)
+                            .fit()
+                            .centerInside()
+                            .into(holder.branch_img);
+
+
+                    holder.post_b.setText(String.valueOf(branch.posts.size()));
+                    holder.foll_b.setText(String.valueOf(branch.followers.size()));
+                    holder.name_b.setText("r/".concat(branch.name));
+
+                } else {
+                    Log.wtf("ERROR", "Error reading branch document.", task.getException());
+                }
+            }
+        });
+
+        holder.bt_follow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                user_ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
-                            branch_ref = task.getResult().getDocuments().get(0).getReference();
-                            branchdata = task.getResult().getDocuments().get(0).toObject(Branch.class);
+                            user = task.getResult().toObject(User.class);
+
+                            if (user.branches.contains(branch_ref)) {
+                                user.branches.remove(branch_ref);
+                                holder.bt_follow.setText("follow");
+                            } else {
+                                user.branches.add(branch_ref);
+                                holder.bt_follow.setText("unfollow");
+                            }
+
+                            user_ref.update("branches", user.branches).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        branch_ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                if (task.isSuccessful()) {
+                                                    Log.i("SUCCESS", "Updated user successfully.");
+                                                    Branch branch = task.getResult().toObject(Branch.class);
+
+                                                    if (branch.followers.contains(user_ref)) { // already follows
+                                                        branch.followers.remove(user_ref);
+                                                    } else {
+                                                        branch.followers.add(user_ref);
+                                                    }
+
+                                                    branch.followers.add(user_ref);
+                                                    branch_ref.update("followers", branch.followers).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                            if (task.isSuccessful()) {
+                                                                Log.i("SUCCESS", "Updated branch successfully.");
+                                                            } else {
+                                                                Log.wtf("Error", "Error reading branch document.", task.getException());
+                                                            }
+                                                        }
+                                                    });
+                                                } else {
+                                                    Log.wtf("Error", "Error reading branch document.", task.getException());
+                                                }
+                                            }
+                                        });
+
+                                    } else {
+                                        Log.wtf("Error", "Error reading user document.", task.getException());
+                                    }
+                                }
+                            });
                         }
                     }
                 });
-
-        holder.post_b.setText(String.valueOf(branches.get(position).posts.size()));
-        holder.foll_b.setText(String.valueOf(branches.get(position).followers.size()));
-        holder.name_b.setText("r/".concat(String.valueOf(branches.get(position).name)));
-        holder.bt_follow.setVisibility(View.INVISIBLE);
+            }
+        });
     }
 
     @Override

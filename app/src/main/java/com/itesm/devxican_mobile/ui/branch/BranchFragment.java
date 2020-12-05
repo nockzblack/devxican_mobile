@@ -94,7 +94,7 @@ public class BranchFragment extends Fragment {
 
 
         rv_branches.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        BranchAdapter adapter = new BranchAdapter(this.getContext(), branches);
+        BranchAdapter adapter = new BranchAdapter(this.getContext(), branches_doc_ref);
         rv_branches.setAdapter(adapter);
 
         adapter.setOnClickListener(new View.OnClickListener() {
