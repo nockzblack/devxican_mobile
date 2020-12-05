@@ -3,12 +3,22 @@
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Sign in or register</string>
+    <string name="sign_in">Sign In</string>
+    <string name="register">Register</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="welcome">"Welcome !"</string>
     <string name="invalid_password">Password must be >5 characters</string>
-    <string name="invalid_username">Not a valid username</string>@
+    <string name="invalid_email">Not a valid email</string>
+
+    <!-- Strings related to login Result -->
     <string name="login_failed">"Login failed"</string>
+    <string name="wrong_password">"Password Incorrect"</string>
+    <string name="wrong_email">"Email Incorrect"</string>
+    <string name="collision_email">"Email already registered"</string>
+
+
+    <!-- Strings related to Home activity -->
+
     <string name="title_activity_home">HomeActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

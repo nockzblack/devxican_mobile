@@ -9,9 +9,13 @@ import android.util.Log;
 import android.util.Patterns;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.itesm.devxican_mobile.data.Result;
 import com.itesm.devxican_mobile.data.model.LoggedInUser;
@@ -44,14 +48,48 @@ public class LoginViewModel extends ViewModel {
         return loginResult;
     }
 
-    public void login(String email, String password) {
+
+
+    public void registerAndLogin(String email, String password) {
 
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Log.wtf(TAG, "createUserWithEmail:success");
+                            Log.wtf(TAG, "createUserWithEmail:successful");
+
+                            user =  new LoggedInUser(mAuth.getCurrentUser());
+
+                            Result<LoggedInUser> result = new Result.Success<>(user);
+
+                            LoggedInUser data = ((Result.Success<LoggedInUser>) result).getData();
+                            loginResult.setValue(new LoginResult(data));
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.wtf(TAG, e.getClass().toString());
+
+                if (e instanceof FirebaseAuthUserCollisionException) {
+                    loginResult.setValue(new LoginResult(R.string.collision_email));
+                } else {
+                    loginResult.setValue(new LoginResult(R.string.login_failed));
+                }
+            }
+        });
+    }
+
+
+    public void signIn(String email, String password) {
+
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Log.wtf(TAG, "createUserWithEmail:successful");
 
                             user =  new LoggedInUser(mAuth.getCurrentUser());
 
@@ -63,12 +101,25 @@ public class LoginViewModel extends ViewModel {
                             loginResult.setValue(new LoginResult(R.string.login_failed));
                         }
                     }
-                });
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                if (e instanceof FirebaseAuthInvalidCredentialsException) {
+                    loginResult.setValue(new LoginResult(R.string.wrong_password));
+                } else if (e instanceof FirebaseAuthInvalidUserException) {
+                    loginResult.setValue(new LoginResult(R.string.wrong_email));
+                } else {
+                    loginResult.setValue(new LoginResult(R.string.login_failed));
+                }
+            }
+        });
     }
+
+
 
     public void loginDataChanged(String username, String password) {
         if (!isUserNameValid(username)) {
-            loginFormState.setValue(new LoginFormState(R.string.invalid_username, null));
+            loginFormState.setValue(new LoginFormState(R.string.invalid_email, null));
         } else if (!isPasswordValid(password)) {
             loginFormState.setValue(new LoginFormState(null, R.string.invalid_password));
         } else {
