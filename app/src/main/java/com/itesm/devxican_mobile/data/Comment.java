@@ -1,16 +1,9 @@
-package com.example.devxican_mobile.data;
+package com.itesm.devxican_mobile.data;
 
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
-
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Random;
 
 public class Comment {
 
