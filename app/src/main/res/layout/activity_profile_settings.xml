@@ -2,8 +2,206 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style='"bold|italic"'
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ProfileSettingsActivity">
+
+    <ImageButton
+        android:id="@+id/profileImage"
+        android:layout_width="162dp"
+        android:layout_height="138dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/badgeSettings"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/emailLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="9dp"
+        android:layout_marginEnd="33dp"
+        android:text="@string/email_settings"
+        android:textStyle="bold|italic"
+        app:layout_constraintEnd_toStartOf="@+id/emailSettingsTextView"
+        app:layout_constraintTop_toTopOf="@+id/emailSettingsTextView" />
+
+    <TextView
+        android:id="@+id/usernameLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="9dp"
+        android:text="@string/username_settings"
+        android:textStyle="bold|italic"
+        app:layout_constraintBaseline_toBaselineOf="@+id/usernameSettingsTextView"
+        app:layout_constraintEnd_toStartOf="@+id/usernameSettingsTextView"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/usernameSettingsTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="26dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/usernameLabel"
+        app:layout_constraintTop_toBottomOf="@+id/emailSettingsTextView" />
+
+    <EditText
+        android:id="@+id/emailSettingsTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="59dp"
+        android:editable="false"
+        android:ems="10"
+        android:enabled="false"
+        android:inputType="textPersonName"
+        app:layout_constraintStart_toStartOf="@+id/usernameSettingsTextView"
+        app:layout_constraintTop_toBottomOf="@+id/noBranchesLabel" />
+
+    <TextView
+        android:id="@+id/noPostLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="39dp"
+        android:text="@string/no_post_settings"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toTopOf="@+id/noFollowsLabel"
+        app:layout_constraintEnd_toEndOf="@+id/noFollowsLabel" />
+
+    <TextView
+        android:id="@+id/noCommentsLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="55dp"
+        android:layout_marginTop="45dp"
+        android:text="@string/no_comments_settings"
+        android:textStyle="italic"
+        app:layout_constraintStart_toStartOf="@+id/badgeSettings"
+        app:layout_constraintTop_toBottomOf="@+id/badgeSettings" />
+
+    <TextView
+        android:id="@+id/noFollowsLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="56dp"
+        android:layout_marginBottom="59dp"
+        android:text="@string/no_follows_settings"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toTopOf="@+id/emailSettingsTextView"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/noBranchesLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="39dp"
+        android:text="@string/no_branches_settings"
+        android:textStyle="italic"
+        app:layout_constraintEnd_toEndOf="@+id/noCommentsLabel"
+        app:layout_constraintTop_toBottomOf="@+id/noCommentsLabel" />
+
+    <TextView
+        android:id="@+id/passwordLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/password_settings"
+        android:textStyle="bold|italic"
+        app:layout_constraintBaseline_toBaselineOf="@+id/passwordSettingsTextView"
+        app:layout_constraintEnd_toStartOf="@+id/passwordSettingsTextView"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/saveSettings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="132dp"
+        android:text="@string/settings_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/passwordSettingsTextView" />
+
+    <EditText
+        android:id="@+id/passwordSettingsTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="31dp"
+        android:layout_marginEnd="25dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/passwordLabel"
+        app:layout_constraintTop_toBottomOf="@+id/usernameSettingsTextView" />
+
+    <TextView
+        android:id="@+id/badgeSettings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="9dp"
+        android:text="@string/admin_settings"
+        android:textAlignment="center"
+        android:textStyle="bold|italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profileImage" />
+
+    <TextView
+        android:id="@+id/postNo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/noPostLabel"
+        app:layout_constraintStart_toEndOf="@+id/noPostLabel" />
+
+    <TextView
+        android:id="@+id/textView12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="17dp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/noFollows"
+        app:layout_constraintStart_toEndOf="@+id/noFollowsLabel" />
+
+    <TextView
+        android:id="@+id/noBranches"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/noBranchesLabel"
+        app:layout_constraintStart_toEndOf="@+id/noBranchesLabel" />
+
+    <TextView
+        android:id="@+id/noFollows"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@+id/textView12"
+        app:layout_constraintTop_toTopOf="@+id/noFollowsLabel" />
+
+    <TextView
+        android:id="@+id/noComments"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="13dp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/noCommentsLabel"
+        app:layout_constraintStart_toEndOf="@+id/noCommentsLabel" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="39dp"
+        android:layout_marginBottom="12dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/emailSettingsTextView"
+        app:layout_constraintStart_toStartOf="@+id/emailSettingsTextView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
