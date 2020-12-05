@@ -9,18 +9,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Devxican_mobile">
-        <activity android:name=".ui.branch.BranchActivity"></activity>
+        <activity android:name=".ui.branch.BranchActivity" />
         <activity
             android:name=".HomeActivity"
             android:label="@string/title_activity_home"
-            android:theme="@style/Theme.Devxican_mobile.NoActionBar">
-
-        </activity>
+            android:theme="@style/Theme.Devxican_mobile.NoActionBar"></activity>
         <activity
             android:name=".ui.login.LoginActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
