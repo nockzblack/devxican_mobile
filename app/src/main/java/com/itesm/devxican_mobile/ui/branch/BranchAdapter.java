@@ -7,9 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,8 +29,6 @@ import com.itesm.devxican_mobile.data.model.User;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 public class BranchAdapter extends RecyclerView.Adapter<com.itesm.devxican_mobile.ui.branch.BranchAdapter.BranchViewHolder> implements View.OnClickListener {
 
@@ -97,6 +93,7 @@ public class BranchAdapter extends RecyclerView.Adapter<com.itesm.devxican_mobil
 
         // downloading image from firebase storage
         String url = branches.get(position).backURL;
+
         Picasso.get()
                 .load(url)
                 .fit()
@@ -119,63 +116,6 @@ public class BranchAdapter extends RecyclerView.Adapter<com.itesm.devxican_mobil
         holder.foll_b.setText(String.valueOf(branches.get(position).followers.size()));
         holder.name_b.setText("r/".concat(String.valueOf(branches.get(position).name)));
         holder.bt_follow.setVisibility(View.INVISIBLE);
-       /*holder.bt_follow.setOnClickListener(new View.OnClickListener() { // follow / unfollow behaviour
-            @Override
-            public void onClick(View view) {
-                user.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() { // update userdata info
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot doc = task.getResult();
-                            userdata = doc.toObject(User.class);
-                            Log.i("INFO", doc.toString());
-
-                            String totoast = "Succsessfully ";
-
-                            if (userdata.branches.size() > 0) {
-                                if (userdata.branches.contains(branch_ref)) {
-                                    holder.bt_follow.setText("unfollow");
-                                }
-                            }
-                            if (holder.bt_follow.getText().toString().equals("unfollow")) {
-                                // unfollow
-                                userdata.branches.remove(branch_ref);
-                                branchdata.followers.remove(user);
-                                totoast.concat("unfollowed! :$");
-                                holder.bt_follow.setText("follow");
-                            } else if (holder.bt_follow.getText().toString().equals("unfollow")){
-                                // follow
-                                userdata.branches.add(branch_ref);
-                                branchdata.followers.add(user);
-                                totoast.concat("followed! :D");
-                                holder.bt_follow.setText("unfollow");
-                            }
-
-                            user.update("branches", userdata.branches).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        branch_ref.update("followers", branchdata.followers).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                if (task.isSuccessful()) {
-                                                    Toast.makeText(context, totoast, Toast.LENGTH_SHORT).show();
-                                                }else {
-                                                    Log.w(ERROR, "Error updating branch document.", task.getException());
-                                                }
-                                            }
-                                        });
-                                    } else {
-                                        Log.w(ERROR, "Error updating user document.", task.getException());
-                                    }
-                                }
-                            });
-
-                        }
-                    }
-                });
-            }
-        });*/
     }
 
     @Override

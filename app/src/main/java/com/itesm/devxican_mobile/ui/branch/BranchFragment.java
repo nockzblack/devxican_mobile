@@ -24,6 +24,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -40,6 +41,7 @@ public class BranchFragment extends Fragment {
     FirebaseFirestore db;
     CollectionReference branches_ref;
     ArrayList<Branch> branches;
+    ArrayList<DocumentReference> branches_doc_ref;
 
     public BranchFragment() {
         // Required empty public constructor
@@ -71,7 +73,10 @@ public class BranchFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         this.branches = new ArrayList<>();
+        this.branches_doc_ref = new ArrayList<>();
+
         branches_ref.get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -79,6 +84,7 @@ public class BranchFragment extends Fragment {
                         if (task.isSuccessful()) {
                             for (DocumentSnapshot documentSnapshot : task.getResult()) {
                                 branches.add(documentSnapshot.toObject(Branch.class));
+                                branches_doc_ref.add(documentSnapshot.getReference());
                             }
                             constructRecycler(); // build recycler after reading all info
                         }
@@ -97,9 +103,8 @@ public class BranchFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intBranch = new Intent(getContext(), BranchActivity.class);
-                intBranch.putExtra("name", branches.get(rv_branches.getChildAdapterPosition(view)).name);
-                //Snackbar.make(getView(), intBranch.getStringExtra("name"), Snackbar.LENGTH_SHORT).setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE).show();
-                Toast.makeText(getContext(), intBranch.getStringExtra("name"), Toast.LENGTH_SHORT).show();
+                intBranch.putExtra("branch_id", branches_doc_ref.get(rv_branches.getChildAdapterPosition(view)).getId());
+                Toast.makeText(getContext(), intBranch.getStringExtra("branch_id"), Toast.LENGTH_SHORT).show();
                 startActivity(intBranch);
             }
         });
