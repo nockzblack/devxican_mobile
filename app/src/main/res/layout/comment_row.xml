@@ -136,6 +136,16 @@
             app:backgroundTintMode="src_over"
             app:srcCompat="@android:drawable/stat_sys_download" />
 
+        <ImageButton
+            android:id="@+id/delcom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="110dp"
+            android:layout_weight="0"
+            android:backgroundTint="#F81D1D"
+            android:visibility="invisible"
+            app:srcCompat="@android:drawable/ic_menu_delete" />
+
     </LinearLayout>
 
 </LinearLayout>

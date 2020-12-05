@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -316,6 +317,65 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                         }
                     });
 
+                    holder.delpost.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            branch_ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        Branch branch = task.getResult().toObject(Branch.class);
+                                        branch.posts.remove(post_ref);
+                                        branch_ref.update("posts", branch.posts).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    user_ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                            if (task.isSuccessful()) {
+                                                                 user = task.getResult().toObject(User.class);
+                                                                 user.posts.remove(post_ref);
+                                                                 user_ref.update("posts", user.posts).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                     @Override
+                                                                     public void onComplete(@NonNull Task<Void> task) {
+                                                                         if (task.isSuccessful()) {
+                                                                             holder.itemView.setVisibility(View.INVISIBLE);
+                                                                             Log.i("SUCCESS", "Erased from db.");
+                                                                         } else {
+                                                                             Log.wtf("ERROR", "Error updating a post");
+                                                                         }
+                                                                     }
+                                                                 });
+                                                            } else {
+                                                                Log.wtf("ERROR", "Error reading a post");
+                                                            }
+
+                                                        }
+                                                    });
+                                                } else {
+                                                    Log.wtf("ERROR", "Error reading a branch");
+                                                }
+                                            }
+                                        });
+                                        post_ref.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+
+                                                } else {
+                                                    Log.wtf("ERROR", "Error deleting a post");
+                                                }
+                                            }
+                                        });
+                                    } else {
+                                        Log.wtf("ERROR", "Error reading a post");
+                                    }
+                                }
+                            });
+                        }
+                    });
+
 
                 } else {
                     Log.wtf("ERROR", "Error reading post document", task.getException());
@@ -344,6 +404,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         TextView branch_name_rv, user_name_rv, post_body_rv, likes_rv, com_num_rv;
         ImageView branch_img_rv, author_img_rv, bt_like_rv, bt_dislike_rv;
         FloatingActionButton hide;
+        ImageButton delpost;
 
         public PostViewHolder(@NonNull View v) {
             super(v);
@@ -354,6 +415,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             author_img_rv = v.findViewById(R.id.author_img_rv);
             bt_like_rv= v.findViewById(R.id.bt_like_rv);
             bt_dislike_rv= v.findViewById(R.id.bt_disike_rv);
+
+            delpost = v.findViewById(R.id.delpost);
             //TextView
             branch_name_rv= v.findViewById(R.id.branch_name_rv);
             user_name_rv= v.findViewById(R.id.user_name_rv);

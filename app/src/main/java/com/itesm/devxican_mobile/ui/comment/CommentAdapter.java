@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -284,6 +285,65 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
 
                     holder.body.setText(com.body); // body
 
+                    holder.delcom.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            user_ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        User user = task.getResult().toObject(User.class);
+                                        user.comments.remove(com_ref);
+                                        user_ref.update("comments", user.comments).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    post_ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                            if (task.isSuccessful()) {
+                                                                Post post = task.getResult().toObject(Post.class);
+                                                                post.comments.remove(com_ref);
+                                                                user_ref.update("comments", user.comments).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                    @Override
+                                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                                        if (task.isSuccessful()) {
+                                                                            holder.itemView.setVisibility(View.INVISIBLE);
+                                                                            Log.i("SUCCESS", "Erased from db.");
+                                                                        } else {
+                                                                            Log.wtf("ERROR", "Error updating a post");
+                                                                        }
+                                                                    }
+                                                                });
+                                                            } else {
+                                                                Log.wtf("ERROR", "Error reading a post");
+                                                            }
+
+                                                        }
+                                                    });
+                                                } else {
+                                                    Log.wtf("ERROR", "Error reading a branch");
+                                                }
+                                            }
+                                        });
+                                        post_ref.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+
+                                                } else {
+                                                    Log.wtf("ERROR", "Error deleting a post");
+                                                }
+                                            }
+                                        });
+                                    } else {
+                                        Log.wtf("ERROR", "Error reading a post");
+                                    }
+                                }
+                            });
+                        }
+                    });
+
                     com.author.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -348,9 +408,12 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         ImageView author_img, branch_img, bt_like, bt_dislike;
         TextView branch_name, author_name, body, likes;
         FloatingActionButton hide;
+        ImageButton delcom;
 
         public CommentViewHolder(@NonNull View v) {
             super(v);
+
+            delcom = v.findViewById(R.id.delcom);
 
             // ImageView
             author_img = v.findViewById(R.id.com_author_img_rv);
