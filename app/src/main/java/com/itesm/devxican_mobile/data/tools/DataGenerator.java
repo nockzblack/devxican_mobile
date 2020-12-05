@@ -4,8 +4,8 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.itesm.devxican_mobile.data.Post;
 import com.example.devxican_mobile.data.Comment;
-import com.example.devxican_mobile.data.Post;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;

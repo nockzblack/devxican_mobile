@@ -20,7 +20,7 @@ public class Comment {
     public DocumentReference author, post;
     public List<DocumentReference> likes,
                                    dislikes;
-    public Comment() {}
+    public Comment(String author, String uid, String postId, String content, List<String> likedBy, List<String> dislikedBy) {}
 
     public Comment(DocumentReference author, String body, DocumentReference post, ArrayList<DocumentReference> likes, ArrayList<DocumentReference> dislikes) {
 
