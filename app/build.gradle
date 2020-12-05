@@ -1,10 +1,7 @@
 plugins {
     id 'com.android.application'
-
 }
-
-apply plugin: 'com.google.gms.google-services'
-
+apply plugin: 'com.google.gms.google-services'  // Google Services plugin
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
@@ -39,12 +36,20 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
+    implementation platform('com.google.firebase:firebase-bom:26.1.0')
     implementation 'com.google.firebase:firebase-auth:19.2.0'
+
     implementation 'androidx.navigation:navigation-fragment:2.3.1'
     implementation 'androidx.navigation:navigation-ui:2.3.1'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'com.google.firebase:firebase-storage:19.1.1'
+    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'com.android.support:design:26.1.0'
+    implementation 'com.google.firebase:firebase-firestore:22.0.0'
+    implementation 'com.google.firebase:firebase-storage:19.2.0'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
-    implementation platform('com.google.firebase:firebase-bom:26.1.0') // firebase
+     // firebase
 }
