@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
@@ -26,6 +27,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.itesm.devxican_mobile.data.model.LoggedInUser;
+import com.itesm.devxican_mobile.data.model.User;
 import com.itesm.devxican_mobile.ui.login.LoginActivity;
 
 import androidx.annotation.NonNull;
@@ -49,7 +51,6 @@ public class HomeActivity extends AppCompatActivity {
     FirebaseFirestore db;
     CollectionReference users_ref;
     User userdata;
-
 
 
 
@@ -130,24 +131,6 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-
-        switch (item.getItemId()) {
-            //Log Out button
-            case R.id.log_out:
-                logOut();
-                return true;
-            case R.id.action_settings:
-                startSettingsActivity();
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-
-
-    }
 
     @Override
     public boolean onSupportNavigateUp() {
@@ -173,21 +156,6 @@ public class HomeActivity extends AppCompatActivity {
 
 
 
-
-
-    private void logOut() {
-        Intent auxIntent = new Intent(this, LoginActivity.class);
-        startActivity(auxIntent);
-        setResult(Activity.RESULT_OK);
-        finish();
-    }
-
-    private void startSettingsActivity() {
-        Intent auxIntent = new Intent(this, ProfileSettingsActivity.class);
-        startActivity(auxIntent);
-        setResult(Activity.RESULT_OK);
-        finish();
-    }
 
 
 
