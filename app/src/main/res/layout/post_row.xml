@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="10dp"
     android:background="#EABFBF"
+    android:foregroundTint="#A80A0A"
     android:orientation="vertical"
     app:layout_anchorGravity="left">
 
@@ -98,7 +99,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/bt_like_rv"
@@ -107,7 +108,7 @@
             android:backgroundTint="#00FFFFFF"
             android:backgroundTintMode="multiply"
             android:clickable="true"
-            android:foregroundTint="#00FFFFFF"
+            android:foregroundTint="#00AC8F8F"
             android:paddingLeft="5dp"
             android:paddingTop="10dp"
             android:paddingEnd="5dp"
