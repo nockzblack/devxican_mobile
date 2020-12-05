@@ -20,7 +20,7 @@ public class Post {
 
 
 
-    public Post(String author, String title, String content) {
+    public Post() {
         //public no-arg constructor needed
     }
 

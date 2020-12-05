@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    android:background="#EABFBF"
+    android:orientation="vertical"
+    app:layout_anchorGravity="left">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/branch_img_rv"
+                android:layout_width="48dp"
+                android:layout_height="44dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="5dp"
+                tools:srcCompat="@tools:sample/avatars" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/branch_name_rv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:text="r/Branch Chida"
+                android:textStyle="bold|italic" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="34dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/author_img_rv"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:scaleType="center"
+                    tools:srcCompat="@tools:sample/avatars" />
+
+                <TextView
+                    android:id="@+id/user_name_rv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="7dp"
+                    android:layout_weight="1"
+                    android:text="user@mail.com"
+                    android:textStyle="italic" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/post_rv_hide"
+            android:layout_width="37dp"
+            android:layout_height="43dp"
+            android:foreground="@android:drawable/ic_menu_view"
+            android:gravity="center|right"
+            android:visibility="invisible"
+            app:backgroundTint="@android:color/holo_red_light"
+            app:rippleColor="@color/colorAccent" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/post_body_rv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="5dp"
+        android:text="I guess this is more of a positive fuck up, but still a fuck up.  Anyway, I've been smoking (just cigarettes) regularly for a bit over 4 years now. I really like smoking, it relaxes me, clears my head, and I love the taste of different tobaccos. Well, loved.  I don't smoke a lot unless I'm out with friends, which as you can guess it's something that's just not happening during this pandemic. As a result, I've spent the last month or so smoking just a couple of cigarettes a day, which really enhanced my sense of smell."
+        android:textAlignment="viewStart" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/bt_like_rv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#00FFFFFF"
+            android:backgroundTintMode="multiply"
+            android:clickable="true"
+            android:foregroundTint="#00FFFFFF"
+            android:paddingLeft="5dp"
+            android:paddingTop="10dp"
+            android:paddingEnd="5dp"
+            android:paddingBottom="10dp"
+            app:backgroundTint="#0043A532"
+            app:backgroundTintMode="src_over"
+            app:srcCompat="@android:drawable/stat_sys_upload" />
+
+        <TextView
+            android:id="@+id/likes_rv"
+            android:layout_width="wrap_content"
+            android:layout_height="34dp"
+            android:layout_marginTop="5dp"
+            android:text="0"
+            android:textSize="24sp" />
+
+        <ImageView
+            android:id="@+id/bt_disike_rv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#00FFFFFF"
+            android:backgroundTintMode="multiply"
+            android:clickable="true"
+            android:foregroundTint="#00FFFFFF"
+            android:paddingLeft="5dp"
+            android:paddingTop="10dp"
+            android:paddingEnd="5dp"
+            android:paddingBottom="10dp"
+            app:backgroundTint="#0043A532"
+            app:backgroundTintMode="src_over"
+            app:srcCompat="@android:drawable/stat_sys_download" />
+
+        <ImageView
+            android:id="@+id/img_com_rv"
+            android:layout_width="36dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="70dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="0"
+            app:srcCompat="@android:drawable/stat_notify_chat" />
+
+        <TextView
+            android:id="@+id/com_num_rv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="0"
+            android:text="0"
+            android:textSize="24sp" />
+
+    </LinearLayout>
+
+</LinearLayout>
