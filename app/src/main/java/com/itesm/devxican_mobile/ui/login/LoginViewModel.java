@@ -20,8 +20,8 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.itesm.devxican_mobile.data.Result;
-import com.itesm.devxican_mobile.data.User;
+import com.itesm.devxican_mobile.data.model.Result;
+import com.itesm.devxican_mobile.data.model.User;
 import com.itesm.devxican_mobile.data.model.LoggedInUser;
 import com.itesm.devxican_mobile.R;
 
