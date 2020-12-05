@@ -166,7 +166,8 @@ public class ProfileSettingsActivity extends AppCompatActivity {
         auxUser.name = username.getText().toString();
         String auxPassword = password.getText().toString();
 
-        if (password.getText().toString() !=  "********") {
+
+        if (!password.getText().equals("********")) {
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             user.updatePassword(auxPassword)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -180,9 +181,14 @@ public class ProfileSettingsActivity extends AppCompatActivity {
                     });
         }
 
+
+
+
         if (photoChange) {
             uploadImage();
         }
+
+        pushChangestoDB();
 
     }
 
@@ -193,7 +199,7 @@ public class ProfileSettingsActivity extends AppCompatActivity {
         docRef.set(auxUser).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Log.d("HERE", "User password updated.");
+                Log.d("HERE", "User  updated.");
                 Toast.makeText(getApplicationContext(), "User Updated!", Toast.LENGTH_LONG).show();
             }
         });

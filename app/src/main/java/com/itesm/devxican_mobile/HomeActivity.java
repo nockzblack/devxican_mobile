@@ -148,8 +148,7 @@ public class HomeActivity extends AppCompatActivity {
     private void startSettingsActivity() {
         Intent auxIntent = new Intent(this, ProfileSettingsActivity.class);
         startActivity(auxIntent);
-        setResult(Activity.RESULT_OK);
-        finish();
+
     }
 
 
