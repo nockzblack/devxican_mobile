@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel;
 
 import android.util.Log;
 import android.util.Patterns;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -17,7 +18,10 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.itesm.devxican_mobile.data.Result;
+import com.itesm.devxican_mobile.data.User;
 import com.itesm.devxican_mobile.data.model.LoggedInUser;
 import com.itesm.devxican_mobile.R;
 
@@ -31,6 +35,8 @@ public class LoginViewModel extends ViewModel {
     private MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();
 
     private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
+    private CollectionReference users_ref;
     private LoggedInUser user;
     private LoginActivity activity;
 
@@ -38,6 +44,10 @@ public class LoginViewModel extends ViewModel {
     LoginViewModel(FirebaseAuth mAuth, LoginActivity activity) {
         this.mAuth = mAuth;
         this.activity = activity;
+
+        this.db = FirebaseFirestore.getInstance();
+        this.users_ref = db.collection("users");
+
     }
 
     LiveData<LoginFormState> getLoginFormState() {
@@ -58,10 +68,15 @@ public class LoginViewModel extends ViewModel {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Log.wtf(TAG, "createUserWithEmail:successful");
-
                             user =  new LoggedInUser(mAuth.getCurrentUser());
 
+                            User userdata = new User(email, "Anonymous", "n/a", "https://firebasestorage.googleapis.com/v0/b/devxicanmobile.appspot.com/o/users%2Fdeveloper.png?alt=media&token=363ffb24-d105-46e3-b2a9-481666fba6a8");
                             Result<LoggedInUser> result = new Result.Success<>(user);
+
+                            if (users_ref.document(task.getResult().getUser().getUid()).set(userdata).isSuccessful()) {
+                                Log.i("INFO", "USUARIO REGISTRADO");
+                            }
+
 
                             LoggedInUser data = ((Result.Success<LoggedInUser>) result).getData();
                             loginResult.setValue(new LoginResult(data));
