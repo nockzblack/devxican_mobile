@@ -27,7 +27,6 @@ import com.itesm.devxican_mobile.R;
 import com.itesm.devxican_mobile.data.model.Branch;
 import com.itesm.devxican_mobile.data.model.User;
 import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
 
 public class BranchAdapter extends RecyclerView.Adapter<com.itesm.devxican_mobile.ui.branch.BranchAdapter.BranchViewHolder> implements View.OnClickListener {

@@ -44,6 +44,7 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.google.firebase:firebase-storage:19.1.1'
     implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'com.android.support:design:26.1.0'
     implementation 'com.google.firebase:firebase-firestore:22.0.0'
     implementation 'com.google.firebase:firebase-storage:19.2.0'
     testImplementation 'junit:junit:4.+'

@@ -73,10 +73,8 @@ public class BranchFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         this.branches = new ArrayList<>();
         this.branches_doc_ref = new ArrayList<>();
-
         branches_ref.get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
