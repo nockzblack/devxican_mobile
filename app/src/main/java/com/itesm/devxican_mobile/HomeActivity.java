@@ -117,7 +117,10 @@ public class HomeActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             //Log Out button
             case R.id.log_out:
-                updateUI();
+                logOut();
+                return true;
+            case R.id.action_settings:
+                startSettingsActivity();
                 return true;
 
             default:
@@ -135,8 +138,15 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
-    private void updateUI() {
+    private void logOut() {
         Intent auxIntent = new Intent(this, LoginActivity.class);
+        startActivity(auxIntent);
+        setResult(Activity.RESULT_OK);
+        finish();
+    }
+
+    private void startSettingsActivity() {
+        Intent auxIntent = new Intent(this, ProfileSettingsActivity.class);
         startActivity(auxIntent);
         setResult(Activity.RESULT_OK);
         finish();
