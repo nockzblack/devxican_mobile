@@ -317,6 +317,20 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                         }
                     });
 
+                    post_ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                Post post = task.getResult().toObject(Post.class);
+                                if (post.author.equals(user_ref)) {
+                                    holder.delpost.setVisibility(View.VISIBLE);
+                                }
+                            } else {
+                                Log.wtf("ERROR", "Error", task.getException());
+                            }
+                        }
+                    });
+
                     holder.delpost.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {

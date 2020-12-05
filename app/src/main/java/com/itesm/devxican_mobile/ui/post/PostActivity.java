@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -52,7 +53,7 @@ public class PostActivity extends AppCompatActivity {
     User user;
     ArrayList<DocumentReference> comments;
     RecyclerView rv_comments;
-
+    ImageButton ib;
     ImageView author_img, bt_like, bt_dislike;
     TextView post_title, post_author, post_branch, post_body, post_likes, post_com_num;
     FloatingActionButton creCom;
@@ -70,9 +71,10 @@ public class PostActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
         storage = FirebaseStorage.getInstance();
-
         curr_user = mAuth.getCurrentUser();
         creCom = findViewById(R.id.new_comment);
+
+
 
 
 

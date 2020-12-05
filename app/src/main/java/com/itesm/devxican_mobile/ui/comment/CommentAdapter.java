@@ -81,12 +81,17 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
     @Override
     public void onBindViewHolder(@NonNull CommentAdapter.CommentViewHolder holder, int position) {
 
+
         DocumentReference com_ref = comments.get(position);
         com_ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     Comment com = task.getResult().toObject(Comment.class);
+                    if (com.author.equals(user_ref)) {
+                        holder.delcom.setVisibility(View.VISIBLE);
+                    }
+
                     com.post.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {

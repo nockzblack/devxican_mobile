@@ -29,8 +29,8 @@
                 tools:srcCompat="@tools:sample/avatars" />
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <TextView
@@ -47,13 +47,21 @@
                     android:id="@+id/post_author_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0
-"
                     android:layout_marginLeft="5dp"
                     android:layout_marginTop="5dp"
+                    android:layout_weight="0
+"
                     android:text="u/User"
                     android:textSize="18sp" />
+
             </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/editPost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                app:srcCompat="@android:drawable/ic_menu_edit" />
 
         </LinearLayout>
 
