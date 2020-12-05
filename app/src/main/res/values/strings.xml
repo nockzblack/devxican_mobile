@@ -146,6 +146,7 @@
     <string name="settings_button">Save Changes</string>
 
 
-
+    <!-- Strings related to News API -->
+    <string name="news_label">News</string>
 
 </resources>
