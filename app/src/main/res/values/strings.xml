@@ -39,4 +39,20 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="branches">Branches</string>
+
+    <!-- Strings related to Profile Settings -->
+    <string name="username_settings">Username:</string>
+    <string name="email_settings">Email:</string>
+    <string name="password_settings">Password:</string>
+    <string name="no_post_settings">Post:</string>
+    <string name="no_comments_settings">Comments:</string>
+    <string name="no_follows_settings">Follows:</string>
+    <string name="no_branches_settings">Branches:</string>
+    <string name="user_settings">Usuario</string>
+    <string name="admin_settings">Admin</string>
+    <string name="settings_button">Save Changes</string>
+
+
+
+
 </resources>
