@@ -40,7 +40,6 @@ public class HomeActivity extends AppCompatActivity {
         Intent auxIntent = getIntent();
         user = (LoggedInUser) auxIntent.getSerializableExtra(USER_TAG);
 
-        assert user != null;
         Toast.makeText(this, user.getDisplayName(), Toast.LENGTH_LONG).show();
 
 
