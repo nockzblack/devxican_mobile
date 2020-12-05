@@ -104,7 +104,7 @@ public class LoginViewModel extends ViewModel {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Log.wtf(TAG, "createUserWithEmail:successful");
+                            Log.wtf(TAG, "signInWithEmailAndPassword:successful");
 
                             user =  new LoggedInUser(mAuth.getCurrentUser());
 
