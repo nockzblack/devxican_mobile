@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 
+import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -11,12 +12,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -101,10 +104,8 @@ public class ProfileSettingsActivity extends AppCompatActivity {
         });
 
 
-        uid = "q6egcEP11JbUeCKfb7Nz";
-
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
-
+        uid = mAuth.getCurrentUser().getUid();
 
 
         User.LOAD_USER(uid);
@@ -125,8 +126,16 @@ public class ProfileSettingsActivity extends AppCompatActivity {
         });
 
 
+        //ActionBar toolbar = getActionBar();
+        //toolbar.setDisplayHomeAsUpEnabled(true);
+
     }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        //this.finish();
+        return true;
+    }
 
     private void updateUI(User user) {
 

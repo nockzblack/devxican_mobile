@@ -166,5 +166,5 @@ public class BranchActivity extends AppCompatActivity {
             "https://firebasestorage.googleapis.com/v0/b/devxicanmobile.appspot.com/o/branches%2Fbackgrounds%2F7.jpg?alt=media&token=7d02fb85-e132-416e-a1a5-12997f1f6cd2",
             "https://firebasestorage.googleapis.com/v0/b/devxicanmobile.appspot.com/o/branches%2Fbackgrounds%2F8.jpg?alt=media&token=05dfb8f9-caaa-43e1-8413-45b08dda3946",
             "https://firebasestorage.googleapis.com/v0/b/devxicanmobile.appspot.com/o/branches%2Fbackgrounds%2F9.jpg?alt=media&token=5acc3f72-91f9-4bbb-9279-768e1f30c918"
-    }
+    };
 }
